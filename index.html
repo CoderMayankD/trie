@@ -1,0 +1,86 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Suggestion</title>
+    <script>
+        let socket;
+
+        window.onload = function() {
+            socket = new WebSocket('ws://127.0.0.1:8000/ws');
+            socket.onmessage = function(event) {
+                const suggestions = JSON.parse(event.data);
+                const suggestionList = document.getElementById('suggestions');
+                suggestionList.innerHTML = '';
+                suggestions.forEach(suggestion => {
+                    const li = document.createElement('li');
+                    li.textContent = suggestion;
+                    suggestionList.appendChild(li);
+                });
+            };
+        };
+
+        function fetchSuggestions() {
+            const input = document.getElementById('input').value.toLowerCase();
+            if (socket.readyState === WebSocket.OPEN) {
+                socket.send(input);
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Word Suggestion</h1>
+    <input type="text" id="input" oninput="fetchSuggestions()" />
+    <ul id="suggestions"></ul>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Suggestion</title>
+    <style>
+        #time {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+    <script>
+        let socket;
+
+        window.onload = function() {
+            socket = new WebSocket('ws://127.0.0.1:8000/ws');
+            socket.onmessage = function(event) {
+                const startTime = performance.now();
+                const suggestions = JSON.parse(event.data);
+                const suggestionList = document.getElementById('suggestions');
+                suggestionList.innerHTML = '';
+                suggestions.forEach(suggestion => {
+                    const li = document.createElement('li');
+                    li.textContent = suggestion;
+                    suggestionList.appendChild(li);
+                });
+                const endTime = performance.now();
+                const timeTaken = (endTime - startTime).toFixed(2);
+                document.getElementById('time').innerText = `Search time: ${timeTaken} milliseconds`;
+            };
+        };
+
+        function fetchSuggestions() {
+            const input = document.getElementById('input').value.toLowerCase();
+            if (socket.readyState === WebSocket.OPEN) {
+                socket.send(input);
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Word Suggestion</h1>
+    <input type="text" id="input" oninput="fetchSuggestions()" />
+    <div id="time"></div>
+    <ul id="suggestions"></ul>
+</body>
+</html>
